@@ -99,6 +99,7 @@ local SIDEBAR_WIDTH = 120
 local Settings = {}
 local SavedConfigs = {}
 local selectedConfigName = nil
+local sButton = nil -- Forward declaration para hindi mag-nil sa toggleUI()
 
 local Opt = {
 	auraHits = 5,
@@ -905,7 +906,11 @@ local function toggleUI()
 	panel.Visible = isOpen
 	if isOpen then
 		panel.Size = UDim2.new(0, 10, 0, 10)
-		panel.Position = UDim2.new(sButton.Position.X.Scale, sButton.Position.X.Offset + 20, sButton.Position.Y.Scale, sButton.Position.Y.Offset + 20)
+		if sButton then
+			panel.Position = UDim2.new(sButton.Position.X.Scale, sButton.Position.X.Offset + 20, sButton.Position.Y.Scale, sButton.Position.Y.Offset + 20)
+		else
+			panel.Position = OPEN_POS
+		end
 		TweenService:Create(panel, TweenInfo.new(0.28, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 			Size = PANEL_SIZE,
 			Position = OPEN_POS
@@ -916,6 +921,7 @@ end
 -- Keybind Listener
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if gameProcessed then return end
+	if UserInputService:GetFocusedTextBox() then return end
 	if pcKeybindEnabled and input.KeyCode == pcKeybind then
 		toggleUI()
 	end
@@ -1230,7 +1236,7 @@ pcall(function()
 end)
 
 --// ===================== RAINBOW S BUTTON & DRAG =====================
-local sButton = Instance.new("TextButton")
+sButton = Instance.new("TextButton")
 sButton.Name = "SButton"
 sButton.Size = BUTTON_SIZE
 sButton.Position = BUTTON_START_POS
@@ -1689,3 +1695,4 @@ if Drops then
 end
 
 end
+
